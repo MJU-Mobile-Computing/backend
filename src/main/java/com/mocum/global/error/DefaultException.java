@@ -1,6 +1,6 @@
 package com.mocum.global.error;
 
-import com.scalpnote.global.payload.ErrorCode;
+import com.mocum.global.payload.ErrorCode;
 import lombok.Getter;
 
 @Getter

@@ -1,12 +1,10 @@
 package com.mocum.global.error;
 
-
-import com.scalpnote.global.payload.ApiResponse;
-import com.scalpnote.global.payload.ErrorCode;
-import com.scalpnote.global.payload.ErrorResponse;
+import com.mocum.global.payload.ApiResponse;
+import com.mocum.global.payload.ErrorCode;
+import com.mocum.global.payload.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -106,28 +104,28 @@ public class ApiControllerAdvice {
         return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(AuthenticationException.class)
-    protected ResponseEntity<?> handleAuthenticationException(AuthenticationException e) {
-
-        ErrorResponse response = ErrorResponse
-                .builder()
-                .status(HttpStatus.NETWORK_AUTHENTICATION_REQUIRED.value())
-                .message(e.getMessage())
-                .build();
-        ApiResponse apiResponse = ApiResponse.builder().check(false).information(response).build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @ExceptionHandler(DefaultAuthenticationException.class)
-    protected ResponseEntity<?> handleCustomAuthenticationException(DefaultAuthenticationException e) {
-        ErrorResponse response = ErrorResponse
-                .builder()
-                .status(HttpStatus.NETWORK_AUTHENTICATION_REQUIRED.value())
-                .message(e.getMessage())
-                .build();
-        ApiResponse apiResponse = ApiResponse.builder().check(false).information(response).build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @ExceptionHandler(AuthenticationException.class)
+//    protected ResponseEntity<?> handleAuthenticationException(AuthenticationException e) {
+//
+//        ErrorResponse response = ErrorResponse
+//                .builder()
+//                .status(HttpStatus.NETWORK_AUTHENTICATION_REQUIRED.value())
+//                .message(e.getMessage())
+//                .build();
+//        ApiResponse apiResponse = ApiResponse.builder().check(false).information(response).build();
+//        return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
+//
+//    @ExceptionHandler(DefaultAuthenticationException.class)
+//    protected ResponseEntity<?> handleCustomAuthenticationException(DefaultAuthenticationException e) {
+//        ErrorResponse response = ErrorResponse
+//                .builder()
+//                .status(HttpStatus.NETWORK_AUTHENTICATION_REQUIRED.value())
+//                .message(e.getMessage())
+//                .build();
+//        ApiResponse apiResponse = ApiResponse.builder().check(false).information(response).build();
+//        return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 
 
     @ExceptionHandler(DefaultNullPointerException.class)
