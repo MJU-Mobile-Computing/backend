@@ -11,7 +11,7 @@ public class TestController {
 
     @GetMapping("/test1")
     public ResponseEntity<?> test() {
-        return ResponseEntity.ok("Hello!!");
+        return ResponseEntity.ok("Hello!");
     }
 
     @GetMapping("/test2")
