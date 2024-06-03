@@ -31,7 +31,7 @@ public class ChatService {
     public ResponseCustom<String> getChatResponse(String prompt) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth("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");
+        headers.setBearerAuth(apiKey);
 
         ChatRequest chatRequest = new ChatRequest();
         chatRequest.setModel("gpt-3.5-turbo");
