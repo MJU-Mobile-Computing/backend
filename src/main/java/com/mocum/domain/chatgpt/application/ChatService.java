@@ -6,6 +6,7 @@ import com.mocum.domain.chatgpt.dto.ChatRequest;
 import com.mocum.domain.chatgpt.dto.ChatRequest.Message;
 import com.mocum.global.payload.ResponseCustom;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -22,6 +23,10 @@ public class ChatService {
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Value("${openai.api.token}")
+    private String apiKey;
+
 
     public ResponseCustom<String> getChatResponse(String prompt) {
         HttpHeaders headers = new HttpHeaders();
