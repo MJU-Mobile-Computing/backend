@@ -24,5 +24,5 @@ public class MonthlySummary extends BaseEntity {
     private float totalProtein;
     private float totalFat;
 
-    private YearMonth month;
+    private String month;
 }
