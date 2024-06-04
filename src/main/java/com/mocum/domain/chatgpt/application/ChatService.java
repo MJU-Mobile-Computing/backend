@@ -21,7 +21,7 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class ChatService {
 
-    private final RestTemplate restTemplate = new RestTemplate(); //
+    private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Value("${openai.api.token}")
