@@ -59,4 +59,17 @@ public class User {
         this.goalWeight = goalWeight;
         this.goalSteps = goalSteps;
     }
+
+    public void updateUserInfo(String firstname, String lastname, String gender, String birthdate, String height, String goal, String weight, String amountOfActivity, String goalWeight, String goalSteps) {
+        if (firstname != null) this.firstname = firstname;
+        if (lastname != null) this.lastname = lastname;
+        if (gender != null) this.gender = gender;
+        if (birthdate != null) this.birthdate = birthdate;
+        if (height != null) this.height = height;
+        if (goal != null) this.goal = goal;
+        if (weight != null) this.weight = weight;
+        if (amountOfActivity != null) this.amountOfActivity = amountOfActivity;
+        if (goalWeight != null) this.goalWeight = goalWeight;
+        if (goalSteps != null) this.goalSteps = goalSteps;
+    }
 }
