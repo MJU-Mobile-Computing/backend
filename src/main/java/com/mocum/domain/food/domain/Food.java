@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "Food")
+@Table(name = "Food", indexes = {
+        @Index(name = "idx_food_foodName", columnList = "foodName")
+})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Food {
