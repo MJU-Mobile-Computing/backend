@@ -2,6 +2,7 @@ package com.mocum.domain.bookmark.presentation;
 
 
 import com.mocum.domain.bookmark.application.BookmarkService;
+import com.mocum.domain.bookmark.dto.BookmarkResponse;
 import com.mocum.domain.bookmark.dto.RegisterBookmarkReq;
 import com.mocum.global.payload.ErrorResponse;
 import com.mocum.global.payload.Message;
@@ -15,6 +16,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "Bookmark", description = "Bookmark API")
 @RestController
@@ -48,4 +51,15 @@ public class BookmarkController {
     ) {
         return ResponseCustom.OK(bookmarkService.deleteBookmark(foodId));
     }
+
+    @Operation(summary = "사용자의 북마크 조회", description = "사용자의 모든 북마크를 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "북마크 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = BookmarkResponse.class))}),
+            @ApiResponse(responseCode = "400", description = "북마크 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    @GetMapping("/list")
+    public ResponseCustom<List<BookmarkResponse>> getBookmarksByUserId() {
+        return ResponseCustom.OK(bookmarkService.getBookmarksByUserId(1L));
+    }
+
 }

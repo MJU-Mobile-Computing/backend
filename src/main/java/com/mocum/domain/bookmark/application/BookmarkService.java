@@ -2,6 +2,7 @@ package com.mocum.domain.bookmark.application;
 
 import com.mocum.domain.bookmark.domain.Bookmark;
 import com.mocum.domain.bookmark.domain.repository.BookmarkRepository;
+import com.mocum.domain.bookmark.dto.BookmarkResponse;
 import com.mocum.domain.bookmark.dto.RegisterBookmarkReq;
 import com.mocum.domain.food.domain.Food;
 import com.mocum.domain.food.domain.repository.FoodRepository;
@@ -11,6 +12,9 @@ import com.mocum.global.payload.Message;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +56,26 @@ public class BookmarkService {
         bookmarkRepository.delete(bookmark);
 
         return new Message("북마크가 성공적으로 삭제되었습니다.");
+    }
+
+    @Transactional
+    public List<BookmarkResponse> getBookmarksByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        List<Bookmark> bookmarks = bookmarkRepository.findByUser(user);
+
+        return bookmarks.stream()
+                .map(bookmark -> new BookmarkResponse(
+                        bookmark.getFood().getId(),
+                        bookmark.getFood().getFoodName(),
+                        bookmark.getFood().getCalories(),
+                        bookmark.getFood().getCarbohydrates(),
+                        bookmark.getFood().getProtein(),
+                        bookmark.getFood().getFat(),
+                        bookmark.getFood().getWater()
+                ))
+                .collect(Collectors.toList());
     }
 
 }
