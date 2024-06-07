@@ -1,5 +1,7 @@
 package com.mocum.domain.user.application;
 
+import com.mocum.domain.exercise.domain.Exercise;
+import com.mocum.domain.exercise.domain.repository.ExerciseRepository;
 import com.mocum.domain.user.domain.DailyIntakes;
 import com.mocum.domain.user.domain.repository.DailyIntakeRepository;
 import com.mocum.domain.user.dto.MainRes;
@@ -18,12 +20,17 @@ import java.util.List;
 public class UserService {
 
     private final DailyIntakeRepository dailyIntakeRepository;
+    private final ExerciseRepository exerciseRepository;
 
     @Transactional
     public MainRes viewMainPage(Long userId) {
         YearMonth currentMonth = YearMonth.now();
         LocalDate startLocalDate = currentMonth.atDay(1);
         LocalDate endLocalDate = currentMonth.atEndOfMonth();
+
+        // 총 운동 시간
+        Long totalExerciseHours = exerciseRepository.findTotalExerciseHoursByUserId(userId).orElseThrow(NullPointerException::new);
+
 
         LocalDateTime startDate = startLocalDate.atStartOfDay();
         LocalDateTime endDate = endLocalDate.atTime(23, 59, 59);
@@ -47,6 +54,7 @@ public class UserService {
                 .totalCarbohydrate(totalCarbohydrates)
                 .totalProteins(totalProteins)
                 .totalFat(totalFat)
+                .totalExerciseTime(totalExerciseHours)
                 .build();
     }
 }
