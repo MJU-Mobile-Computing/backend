@@ -1,6 +1,5 @@
-package com.mocum.domain.user.controller;
+package com.mocum.domain.user.presentation;
 
-import com.mocum.domain.mypage.dto.MypageRes;
 import com.mocum.domain.user.application.UserService;
 import com.mocum.domain.user.dto.MainRes;
 import com.mocum.global.payload.ErrorResponse;
