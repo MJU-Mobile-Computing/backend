@@ -1,5 +1,6 @@
 package com.mocum.domain.food.application;
 
+import com.mocum.domain.bookmark.domain.repository.BookmarkRepository;
 import com.mocum.domain.food.domain.Food;
 import com.mocum.domain.food.domain.repository.FoodRepository;
 import com.mocum.domain.food.dto.FoodSearchRes;
@@ -24,10 +25,12 @@ public class FoodService {
     private final UserRepository userRepository;
     private final FoodRepository foodRepository;
     private final DailyIntakeRepository dailyIntakeRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     @Transactional
     public FoodSearchRes searchFood(String foodName) {
         List<Food> foods = foodRepository.findAllByFoodName(foodName);
+        User user = userRepository.findById(1L).orElseThrow(NullPointerException::new);
 
         List<FoodSearchRes.FoodDto> foodDtos = foods.stream().map(food -> {
             FoodSearchRes.FoodDto dto = new FoodSearchRes.FoodDto();
@@ -38,12 +41,18 @@ public class FoodService {
             dto.setProtein(food.getProtein());
             dto.setFat(food.getFat());
             dto.setWater(food.getWater());
+
+            // Check if the food is bookmarked by the user
+            boolean isBookmarked = bookmarkRepository.findByUserAndFood(user, food).isPresent();
+            dto.setBookmarked(isBookmarked);
+
             return dto;
         }).collect(Collectors.toList());
 
         FoodSearchRes response = new FoodSearchRes();
         response.setFoods(foodDtos);
         return response;
+
     }
 
     @Transactional
