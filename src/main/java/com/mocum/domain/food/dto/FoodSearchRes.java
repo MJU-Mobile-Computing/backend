@@ -17,5 +17,6 @@ public class FoodSearchRes {
         private double protein;
         private double fat;
         private double water;
+        private boolean bookmarked;
     }
 }
