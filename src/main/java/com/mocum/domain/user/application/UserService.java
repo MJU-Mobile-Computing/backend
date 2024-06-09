@@ -57,4 +57,40 @@ public class UserService {
                 .totalExerciseTime(totalExerciseHours)
                 .build();
     }
+
+    @Transactional
+    public MainRes viewMainPageByDate(Long userId, LocalDate date) {
+        return getMainPageData(userId, date);
+    }
+
+    private MainRes getMainPageData(Long userId, LocalDate date) {
+        // 총 운동 시간
+        Long totalExerciseHours = exerciseRepository.findTotalExerciseHoursByUserId(userId).orElse(0L);
+
+        LocalDateTime startDate = date.atStartOfDay();
+        LocalDateTime endDate = date.atTime(23, 59, 59);
+
+        List<Object[]> dailyIntakeSummary = dailyIntakeRepository.findDailyIntakeByUserId(userId, startDate, endDate);
+
+        float totalCalories = 0;
+        float totalCarbohydrates = 0;
+        float totalProteins = 0;
+        float totalFat = 0;
+
+        for (Object[] result : dailyIntakeSummary) {
+            totalCalories += result[0] != null ? ((Number) result[0]).floatValue() : 0;
+            totalCarbohydrates += result[1] != null ? ((Number) result[1]).floatValue() : 0;
+            totalProteins += result[2] != null ? ((Number) result[2]).floatValue() : 0;
+            totalFat += result[3] != null ? ((Number) result[3]).floatValue() : 0;
+        }
+
+        return MainRes.builder()
+                .totalCalories(totalCalories)
+                .totalCarbohydrate(totalCarbohydrates)
+                .totalProteins(totalProteins)
+                .totalFat(totalFat)
+                .totalExerciseTime(totalExerciseHours)
+                .build();
+    }
+
 }
