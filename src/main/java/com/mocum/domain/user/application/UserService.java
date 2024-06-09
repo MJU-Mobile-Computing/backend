@@ -64,9 +64,6 @@ public class UserService {
     }
 
     private MainRes getMainPageData(Long userId, LocalDate date) {
-        // 총 운동 시간
-        Long totalExerciseHours = exerciseRepository.findTotalExerciseHoursByUserId(userId).orElse(0L);
-
         LocalDateTime startDate = date.atStartOfDay();
         LocalDateTime endDate = date.atTime(23, 59, 59);
 
@@ -84,6 +81,8 @@ public class UserService {
             totalFat += result[3] != null ? ((Number) result[3]).floatValue() : 0;
         }
 
+        Long totalExerciseHours = exerciseRepository.findDailyExerciseHoursByUserId(userId, startDate, endDate).orElse(0L);
+
         return MainRes.builder()
                 .totalCalories(totalCalories)
                 .totalCarbohydrate(totalCarbohydrates)
@@ -92,5 +91,6 @@ public class UserService {
                 .totalExerciseTime(totalExerciseHours)
                 .build();
     }
+
 
 }
