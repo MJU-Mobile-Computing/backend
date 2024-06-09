@@ -35,6 +35,10 @@ public class MonthlySummary extends BaseEntity {
         this.goalCalories = goalCalories;
     }
 
+    public MonthlySummary(int i, User user, String string) {
+        super();
+    }
+
     public void setGoalCalories(float goalCalories) {
         this.goalCalories = goalCalories;
     }

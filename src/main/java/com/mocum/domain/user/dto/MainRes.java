@@ -11,4 +11,5 @@ public class MainRes {
     private float totalProteins;
     private float totalFat;
     private Long totalExerciseTime;
+    private float goalCalories;
 }
