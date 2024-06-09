@@ -89,12 +89,16 @@ public class UserService {
 
         Long totalExerciseHours = exerciseRepository.findDailyExerciseHoursByUserId(userId, startDate, endDate).orElse(0L);
 
+        MonthlySummary monthlySummary = monthlySummaryRepository.findTopByUserOrderByCreatedAtDesc(userRepository.findById(userId).orElseThrow(NullPointerException::new))
+                .orElse(new MonthlySummary(0, userRepository.findById(userId).orElseThrow(NullPointerException::new), YearMonth.now().toString()));
+
         return MainRes.builder()
                 .totalCalories(totalCalories)
                 .totalCarbohydrate(totalCarbohydrates)
                 .totalProteins(totalProteins)
                 .totalFat(totalFat)
                 .totalExerciseTime(totalExerciseHours)
+                .goalCalories(monthlySummary.getGoalCalories())
                 .build();
     }
 
@@ -104,21 +108,23 @@ public class UserService {
         User user = userRepository.findById(l).orElseThrow(NullPointerException::new);
         YearMonth currentMonth = YearMonth.now();
 
-        MonthlySummary monthlySummary = monthlySummaryRepository.findByUserAndMonth(user, currentMonth.toString())
-                .orElse(MonthlySummary.builder()
-                        .goalCalories(goalCalReq.getGoalCalories())
-                        .user(user)
-                        .build());
-
-        // 이미 존재하는 경우 목표 칼로리 업데이트
-        if (monthlySummary.getId() != null) {
-            monthlySummary.setGoalCalories(goalCalReq.getGoalCalories());
+        // 존재하는지 확인
+        MonthlySummary existingSummary = monthlySummaryRepository.findAll().get(0);
+        if (existingSummary != null) {
+            // 존재하면 업데이트
+            existingSummary.setGoalCalories(goalCalReq.getGoalCalories());
         } else {
-            monthlySummaryRepository.save(monthlySummary);
+            // 존재하지 않으면 새로 생성
+            MonthlySummary newSummary = MonthlySummary.builder()
+                    .goalCalories(goalCalReq.getGoalCalories())
+                    .user(user)
+                    .build();
+            monthlySummaryRepository.save(newSummary);
         }
 
         return Message.builder()
                 .message("목표 칼로리 설정 완료")
                 .build();
+
     }
 }
