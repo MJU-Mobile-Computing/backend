@@ -11,6 +11,7 @@ import com.mocum.domain.user.domain.repository.DailyIntakeRepository;
 import com.mocum.domain.user.domain.repository.UserRepository;
 import com.mocum.global.payload.Message;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class FoodService {
 
     private final UserRepository userRepository;
@@ -29,8 +31,13 @@ public class FoodService {
 
     @Transactional
     public FoodSearchRes searchFood(String foodName) {
+        log.info("Searching for food with name: {}", foodName);
+
         List<Food> foods = foodRepository.findAllByFoodName(foodName);
-        User user = userRepository.findById(1L).orElseThrow(NullPointerException::new);
+        log.info("Found {} foods with name like: {}", foods.size(), foodName);
+
+        User user = userRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        log.info("Found user: {}", user.getId());
 
         List<FoodSearchRes.FoodDto> foodDtos = foods.stream().map(food -> {
             FoodSearchRes.FoodDto dto = new FoodSearchRes.FoodDto();
@@ -52,7 +59,6 @@ public class FoodService {
         FoodSearchRes response = new FoodSearchRes();
         response.setFoods(foodDtos);
         return response;
-
     }
 
     @Transactional

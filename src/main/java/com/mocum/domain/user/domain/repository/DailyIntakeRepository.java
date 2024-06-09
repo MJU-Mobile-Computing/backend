@@ -20,4 +20,17 @@ public interface DailyIntakeRepository extends JpaRepository<DailyIntakes, Long>
                                              @Param("startDate") LocalDateTime startDate,
                                              @Param("endDate") LocalDateTime endDate);
 
+    @Query("SELECT SUM(d.calories), SUM(d.carbohydrates), SUM(d.protein), SUM(d.fat) " +
+            "FROM DailyIntakes d " +
+            "WHERE d.user.id = :userId AND d.createdAt BETWEEN :startDate AND :endDate")
+    List<Object[]> findMonthlyIntakeByUserId2(@Param("userId") Long userId,
+                                             @Param("startDate") LocalDateTime startDate,
+                                             @Param("endDate") LocalDateTime endDate);
+
+    @Query("SELECT SUM(d.calories), SUM(d.carbohydrates), SUM(d.protein), SUM(d.fat) " +
+            "FROM DailyIntakes d " +
+            "WHERE d.user.id = :userId AND d.createdAt BETWEEN :startDate AND :endDate")
+    List<Object[]> findDailyIntakeByUserId(@Param("userId") Long userId,
+                                           @Param("startDate") LocalDateTime startDate,
+                                           @Param("endDate") LocalDateTime endDate);
 }
