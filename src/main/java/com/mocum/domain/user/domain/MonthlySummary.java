@@ -2,6 +2,7 @@ package com.mocum.domain.user.domain;
 
 import com.mocum.domain.common.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import java.time.YearMonth;
@@ -23,6 +24,18 @@ public class MonthlySummary extends BaseEntity {
     private float totalCarbohydrates;
     private float totalProtein;
     private float totalFat;
+    private float goalCalories;
 
     private String month;
+
+
+    @Builder
+    public MonthlySummary(float goalCalories, User user) {
+        this.user = user;
+        this.goalCalories = goalCalories;
+    }
+
+    public void setGoalCalories(float goalCalories) {
+        this.goalCalories = goalCalories;
+    }
 }

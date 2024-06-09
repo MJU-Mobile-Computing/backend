@@ -1,10 +1,14 @@
 package com.mocum.domain.user.application;
 
-import com.mocum.domain.exercise.domain.Exercise;
 import com.mocum.domain.exercise.domain.repository.ExerciseRepository;
-import com.mocum.domain.user.domain.DailyIntakes;
+import com.mocum.domain.user.domain.MonthlySummary;
+import com.mocum.domain.user.domain.User;
 import com.mocum.domain.user.domain.repository.DailyIntakeRepository;
+import com.mocum.domain.user.domain.repository.MonthlySummaryRepository;
+import com.mocum.domain.user.domain.repository.UserRepository;
+import com.mocum.domain.user.dto.GoalCalReq;
 import com.mocum.domain.user.dto.MainRes;
+import com.mocum.global.payload.Message;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +25,8 @@ public class UserService {
 
     private final DailyIntakeRepository dailyIntakeRepository;
     private final ExerciseRepository exerciseRepository;
+    private final MonthlySummaryRepository monthlySummaryRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public MainRes viewMainPage(Long userId) {
@@ -93,4 +99,26 @@ public class UserService {
     }
 
 
+    @Transactional
+    public Message setGoalCalories(long l, GoalCalReq goalCalReq) {
+        User user = userRepository.findById(l).orElseThrow(NullPointerException::new);
+        YearMonth currentMonth = YearMonth.now();
+
+        MonthlySummary monthlySummary = monthlySummaryRepository.findByUserAndMonth(user, currentMonth.toString())
+                .orElse(MonthlySummary.builder()
+                        .goalCalories(goalCalReq.getGoalCalories())
+                        .user(user)
+                        .build());
+
+        // 이미 존재하는 경우 목표 칼로리 업데이트
+        if (monthlySummary.getId() != null) {
+            monthlySummary.setGoalCalories(goalCalReq.getGoalCalories());
+        } else {
+            monthlySummaryRepository.save(monthlySummary);
+        }
+
+        return Message.builder()
+                .message("목표 칼로리 설정 완료")
+                .build();
+    }
 }
